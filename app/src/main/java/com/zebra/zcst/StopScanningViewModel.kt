@@ -38,8 +38,14 @@ class StopScanningViewModel : ViewModel() {
         val scanResultCategory = "com.zebra.trigger.CATEGORY"
     }
 
+    var delayBeforeStopScanMilliSeconds: MutableState<Float> = mutableStateOf(20f)
     var barcodeText: MutableState<String> = mutableStateOf("")
     var scanDataIntentReceiver: BroadcastReceiver? = null
+
+    private val delay: Long
+        get() {
+            return delayBeforeStopScanMilliSeconds.value.toLong()
+        }
 
     fun handleOnCreate(context: Context) {
         context.sendOrderedBroadcast(
@@ -74,7 +80,7 @@ class StopScanningViewModel : ViewModel() {
             barcodeText.value = data
         }
         // delay 20ms to wait beep sound over
-        Timer().schedule(20) {
+        Timer().schedule(delay) {
             stopScanning(context)
         }
     }

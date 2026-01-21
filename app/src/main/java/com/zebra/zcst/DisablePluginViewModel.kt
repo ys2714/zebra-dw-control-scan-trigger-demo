@@ -38,8 +38,14 @@ class DisablePluginViewModel : ViewModel() {
         val scanResultCategory = "com.zebra.trigger.CATEGORY"
     }
 
+    var delayBeforeStopScanMilliSeconds: MutableState<Float> = mutableStateOf(20f)
     var barcodeText: MutableState<String> = mutableStateOf("")
     var scanDataIntentReceiver: BroadcastReceiver? = null
+
+    private val delay: Long
+        get() {
+            return delayBeforeStopScanMilliSeconds.value.toLong()
+        }
 
     fun handleOnCreate(context: Context) {
         context.sendOrderedBroadcast(
@@ -78,10 +84,10 @@ class DisablePluginViewModel : ViewModel() {
 
     fun restartPlugin(context: Context) {
         // delay 20ms to wait beep sound over
-        Timer().schedule(20) {
+        Timer().schedule(delay) {
             disablePlugin(context)
         }
-        Timer().schedule(25) {
+        Timer().schedule(delay + 5) {
             enablePlugin(context)
         }
     }

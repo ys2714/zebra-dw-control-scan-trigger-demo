@@ -6,8 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,9 +53,26 @@ class StopScanningActivity: ComponentActivity() {
             ) { newValue ->
                 barcodeText.value = newValue
             }
+            Text("delay before stop scanning 20-1000 (ms)")
+            Text("value = ${viewModel.delayBeforeStopScanMilliSeconds.value.toInt()}")
+            ThresholdSlider()
             RoundButton("Stop by \nSTOP_SCANNING API", color = Color(0xFFF00000)) {
                 viewModel.stopScanning(this@StopScanningActivity)
             }
         }
+    }
+
+    @Composable
+    fun ThresholdSlider() {
+        Slider(
+            value = viewModel.delayBeforeStopScanMilliSeconds.value,
+            onValueChange = { viewModel.delayBeforeStopScanMilliSeconds.value = it },
+            colors = SliderDefaults.colors(
+                thumbColor = Color.Blue,
+                activeTrackColor = Color.Green,
+                inactiveTickColor = Color.LightGray
+            ),
+            valueRange = 20f..1000f
+        )
     }
 }
