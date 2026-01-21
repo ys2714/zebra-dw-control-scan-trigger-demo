@@ -50,7 +50,7 @@ class DisablePluginActivity: ComponentActivity() {
                 barcodeText.value = newValue
             }
             RoundButton("Stop by \nDISABLE_PLUGIN & ENABLE_PLUGIN API", color = Color(0xFFF00000)) {
-                viewModel.disablePlugin(this@DisablePluginActivity)
+                viewModel.restartPlugin(this@DisablePluginActivity)
             }
         }
     }

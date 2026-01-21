@@ -73,6 +73,10 @@ class DisablePluginViewModel : ViewModel() {
             val date = Date(timestamp)
             barcodeText.value = data
         }
+        restartPlugin(context)
+    }
+
+    fun restartPlugin(context: Context) {
         // delay 20ms to wait beep sound over
         Timer().schedule(20) {
             disablePlugin(context)
@@ -82,7 +86,7 @@ class DisablePluginViewModel : ViewModel() {
         }
     }
 
-    fun disablePlugin(context: Context) {
+    private fun disablePlugin(context: Context) {
         context.sendOrderedBroadcast(
             Intent().apply {
                 action = "com.symbol.datawedge.api.ACTION"
@@ -92,7 +96,7 @@ class DisablePluginViewModel : ViewModel() {
         )
     }
 
-    fun enablePlugin(context: Context) {
+    private fun enablePlugin(context: Context) {
         context.sendOrderedBroadcast(
             Intent().apply {
                 action = "com.symbol.datawedge.api.ACTION"
