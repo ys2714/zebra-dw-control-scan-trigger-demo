@@ -9,6 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import java.util.Date
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 class DataWedgeTriggerBasicViewModel : ViewModel() {
 
@@ -40,7 +42,6 @@ class DataWedgeTriggerBasicViewModel : ViewModel() {
     var sessionStatus = mutableStateOf("")
     var scanDataIntentReceiver: BroadcastReceiver? = null
 
-
     fun handleOnCreate(context: Context) {
         context.sendOrderedBroadcast(
             Intent().apply {
@@ -60,7 +61,6 @@ class DataWedgeTriggerBasicViewModel : ViewModel() {
     }
 
     fun handleOnScanData(context: Context, intent: Intent?) {
-        stopScanning(context)
         if (intent == null) {
             return
         }
@@ -73,6 +73,9 @@ class DataWedgeTriggerBasicViewModel : ViewModel() {
             val timestamp: Long = it.getLong("com.symbol.datawedge.data_dispatch_time")
             val date = Date(timestamp)
             barcodeText.value = data
+        }
+        Timer().schedule(20) {
+            stopScanning(context)
         }
     }
 
@@ -89,7 +92,7 @@ class DataWedgeTriggerBasicViewModel : ViewModel() {
     // Setup Listeners
 
     fun registerDataListener(context: Context) {
-        val ctx = context
+        val ctx = context.applicationContext
         if (scanDataIntentReceiver != null) {
             return
         }
@@ -99,7 +102,7 @@ class DataWedgeTriggerBasicViewModel : ViewModel() {
             }
         }
         ContextCompat.registerReceiver(
-            ctx.applicationContext,
+            ctx,
             scanDataIntentReceiver,
             IntentFilter().apply {
                 addAction(scanResultAction)
@@ -110,8 +113,9 @@ class DataWedgeTriggerBasicViewModel : ViewModel() {
     }
 
     fun unregisterDataListener(context: Context) {
+        val ctx = context.applicationContext
         if (scanDataIntentReceiver != null) {
-            context.unregisterReceiver(scanDataIntentReceiver)
+            ctx.unregisterReceiver(scanDataIntentReceiver)
             scanDataIntentReceiver = null
         }
     }
