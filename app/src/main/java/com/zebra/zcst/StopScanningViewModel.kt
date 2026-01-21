@@ -12,7 +12,7 @@ import java.util.Date
 import java.util.Timer
 import kotlin.concurrent.schedule
 
-class DataWedgeTriggerBasicViewModel : ViewModel() {
+class StopScanningViewModel : ViewModel() {
 
     /**
      * please create a profile with following settings:
@@ -39,7 +39,6 @@ class DataWedgeTriggerBasicViewModel : ViewModel() {
     }
 
     var barcodeText: MutableState<String> = mutableStateOf("")
-    var sessionStatus = mutableStateOf("")
     var scanDataIntentReceiver: BroadcastReceiver? = null
 
     fun handleOnCreate(context: Context) {
@@ -74,6 +73,7 @@ class DataWedgeTriggerBasicViewModel : ViewModel() {
             val date = Date(timestamp)
             barcodeText.value = data
         }
+        // delay 20ms to wait beep sound over
         Timer().schedule(20) {
             stopScanning(context)
         }

@@ -1,43 +1,28 @@
 package com.zebra.zcst
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-class DataWedgeTriggerBasicActivity: ComponentActivity() {
-
-    val viewModel = DataWedgeTriggerBasicViewModel()
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.handleOnCreate(this)
         setContent {
             RootView()
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.handleOnPause(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.handleOnResume(this)
-    }
-
     @Composable
     fun RootView() {
-        val barcodeText = remember { viewModel.barcodeText }
         Column(
             Modifier
                 .padding(horizontal = 16.dp, vertical = 16.dp)
@@ -49,17 +34,11 @@ class DataWedgeTriggerBasicActivity: ComponentActivity() {
             Text("แบบไทย")
             Text("हिंदी")
             Text("----------")
-            Text("Session Status: " + viewModel.sessionStatus.value)
-            StyledOutlinedTextField(
-                "scan barcode or manually input",
-                barcodeText.value,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) { newValue ->
-                barcodeText.value = newValue
+            RoundButton("STOP_SCANNING", color = Color(0xFF0000F0)) {
+                startActivity(Intent(this@MainActivity, StopScanningActivity::class.java))
             }
-            RoundButton("Stop Continues Scan", color = Color(0xFFF00000)) {
-                viewModel.stopScanning(this@DataWedgeTriggerBasicActivity)
+            RoundButton("DISABLE_PLUGIN", color = Color(0xFF0000F0)) {
+                startActivity(Intent(this@MainActivity, DisablePluginActivity::class.java))
             }
         }
     }
